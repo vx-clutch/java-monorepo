@@ -3,8 +3,8 @@ import java.util.Scanner;
 public class Main {
     private static String[][] board;
 
-    // private static final String invaliderr = "Invalid input: expected input:\n\t<int> <int>.";
-    
+    private static final String invaliderr = "\nInvalid input: expected:\n\t<int> <int>";
+
     public static void main(String args[]) {
         Scanner scanner = new Scanner(System.in);
         board = new String[3][3];
@@ -13,7 +13,7 @@ public class Main {
         board[0][0] = " ";
         board[0][1] = " ";
         board[0][2] = " ";
-    
+
         board[1][0] = " ";
         board[1][1] = " ";
         board[1][2] = " ";
@@ -26,14 +26,29 @@ public class Main {
         boolean isPlayerOneTurn = true;
 
         printBoard();
+
         while (!win) {
-            if (isPlayerOneTurn) {
-                System.out.print("Player 1: Pick a square (row col) >> ");
-            } else {
-                System.out.print("Player 2: Pick a square (row col) >> ");
-            }
-            int col = scanner.nextInt();
-            int row = scanner.nextInt();
+
+            int row = -1;
+            int col = -1;
+
+            do {
+                if (isPlayerOneTurn) {
+                    System.out.print("\nPlayer 1: Pick a square (row col) >> ");
+                } else {
+                    System.out.print("\nPlayer 2: Pick a square (row col) >> ");
+                }
+
+                row = scanner.nextInt();
+                col = scanner.nextInt();
+
+                if ((col != 0 && col != 1 && col != 2) || (row != 0 && row != 1 && row != 2)) {
+                    System.out.println(invaliderr);
+                } else {
+                    break;
+                }
+            } while (true);
+
             String lastChar;
             if (isPlayerOneTurn) {
                 board[row][col] = "X";
@@ -44,6 +59,7 @@ public class Main {
                 lastChar = "O";
                 isPlayerOneTurn = true;
             }
+
             printBoard();
             win = checkWinCondition(lastChar);
         }
@@ -56,7 +72,7 @@ public class Main {
     }
 
     static void printBoard() {
-        System.out.println("    0   1   2  ");
+        System.out.println("\n    0   1   2  ");
         System.out.println("  |---|---|---|");
         System.out.println("0 |-" + board[0][0] + "-|-" + board[1][0] + "-|-" + board[2][0] + "-|");
         System.out.println("  |---|---|---|");
@@ -103,14 +119,14 @@ public class Main {
             rowSum = rowSum + intBoard[0][i];
             rowSum = rowSum + intBoard[1][i];
             rowSum = rowSum + intBoard[2][i];
-            if (rowSum == 3) {
+            if (rowSum == 3 || rowSum == 0) {
                 return true;
             }
             int colSum = 0;
             colSum = colSum + intBoard[i][0];
             colSum = colSum + intBoard[i][1];
             colSum = colSum + intBoard[i][2];
-            if (colSum == 3) {
+            if (colSum == 3 || colSum == 0) {
                 return true;
             }
         }
@@ -120,10 +136,8 @@ public class Main {
         diagSum = diagSum + intBoard[1][1];
         diagSum = diagSum + intBoard[2][2];
 
-        if (diagSum == 3) {
+        if (diagSum == 3 || diagSum == 0) {
             return true;
-        } else if (diagSum == 0) {
-            return false;
         }
 
         int diag1Sum = 0;
@@ -131,19 +145,10 @@ public class Main {
         diag1Sum = diag1Sum + intBoard[1][1];
         diag1Sum = diag1Sum + intBoard[2][0];
 
-        if (diag1Sum == 3) {
-            return true;
-        } else if (diag1Sum == 0) {
-            return false;
-        }
-
-        return false;
-    }
-
-    static boolean validate(int x) {
-        if (x > 0 && x < 3) {
+        if (diag1Sum == 3 || diag1Sum == 0) {
             return true;
         }
+
         return false;
     }
 }
